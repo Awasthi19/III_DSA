@@ -97,6 +97,64 @@ void deleteNodeAtPosition(Node* &head,Node* &tail,int position){
         
 }
 
+//searching a node in the list
+bool search(Node* head, int searchData) {
+    Node* temp = head;
+    while (temp != nullptr) {
+        if (temp->data == searchData)
+            return true; 
+        temp = temp->next;
+    }
+    return false; 
+}
+
+//retrieving a node in the list
+Node* retrieve(Node* head, int searchData) {
+    Node* temp = head;
+    while (temp != nullptr) {
+        if (temp->data == searchData)
+            return temp; 
+        temp = temp->next;
+    }
+    return nullptr; 
+}
+
+bool isEmpty(Node* head) {
+        return head == nullptr;
+}
+
+// remove method: Removes the node with the given data
+void remove(Node* &head, Node* &tail, int data) {
+    if (head == nullptr)
+        return; // List is empty
+
+    Node* curr = head;
+    Node* prev = nullptr;
+
+    // finding the node with the data
+    while (curr != nullptr && curr->data != data) {
+        prev = curr;
+        curr = curr->next;
+    }
+
+    // If the data was not found
+    if (curr == nullptr)
+        return; 
+
+    // If the node with the data is the head
+    if (prev == nullptr)
+        head = head->next;
+    else
+        prev->next = curr->next;
+
+    // If the node with the data is the tail
+    if (curr == tail)
+        tail = prev;
+
+    delete curr;
+}
+
+
 int main() {
     Node* n1 = new Node(1);
     Node* n2 = new Node(2);
@@ -108,22 +166,34 @@ int main() {
     cout<<"----------------------------------------------\n";
     cout<<"| Initial List:            ";
     printList(head);
+    cout<<"| Checking list is empty: [0->false][1->True]    "<<isEmpty(head)<<endl;
+    cout<<"| Searching 3 in list: [0->false][1->True]       "<<search(head,3)<<endl;
+    cout<<"| Retrieving pointer to element 2 in list:       "<<retrieve(head,2)<<endl;
     addToHead(head,5);
     addToHead(head,4);
-    cout<<"| After adding to head:    ";
+    cout<<"| Added To Head:             ";
     printList(head);
     addToTail(tail,9);
     addToTail(tail,10);
-    cout<<"| After adding to tail:    ";
+    cout<<"| After adding to tail:      ";
     printList(head);
     addToPosition(head,tail,3,25);
-    cout<<"| After adding to middle:  ";
+    cout<<"| After adding to middle:    ";
     printList(head);
     deleteNodeAtPosition(head,tail,8);
-    cout<<"| After deleting at  :     ";
+    cout<<"| After deleting at tail :   ";
+    printList(head);
+    deleteNodeAtPosition(head,tail,1);
+    cout<<"| After deleting at head :   ";
+    printList(head);
+    deleteNodeAtPosition(head,tail,3);
+    cout<<"| After deleting at middle : ";
     printList(head);
     addToTail(tail,12);
-    cout<<"| After adding to tail:    ";
+    cout<<"| After adding to tail:      ";
+    printList(head);
+    cout<<"| Removing 25 from list:     ";
+    remove(head,tail,25);
     printList(head);
     cout<<"----------------------------------------------\n";
     return 0;
