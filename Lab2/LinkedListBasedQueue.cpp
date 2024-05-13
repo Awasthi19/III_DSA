@@ -2,81 +2,108 @@
 #include "SinglyLinkedList.h"
 using namespace std;
 
-class LinkedListStack {
+class LinkedListBasedQueue {
 private:
-    Node *top;
-
+    Node *front;
+    Node *rear;
 public:
-    LinkedListStack() {
-        top = NULL; // Initializing the stack
+    LinkedListBasedQueue() {
+        front = NULL;
+        rear = NULL;
     }
 
-    bool push(int element) {
-        addToHead(top, element);
-        cout << "|  Pushed element: " << element << endl;
-        return true;
+    void enqueue(int element) {
+        Node *temp = new Node(element);
+        if (rear == NULL) {
+            front = rear = temp;
+            cout << "|  Enqueued element: " << element << endl;
+            return ;
+        }
+        rear->next = temp;
+        rear = temp;
+        cout << "|  Enqueued element: " << element << endl;
+        return ;
     }
 
-    int pop() {
+    int dequeue() {
         if (isEmpty()) {
-            cout << "|  Stack Underflow" << endl;
+            cout << "|  Queue Underflow" << endl;
             return -1;
         }
-        int poppedValue = top->data;
-        removeFromHead(top);
-        cout << "|  Popped element: " << poppedValue << endl;
-        return poppedValue;
+        int dequeuedValue = front->data;
+        Node *temp = front;
+        front = front->next;
+        if (front == NULL) {
+            rear = NULL;
+        }
+        cout << "|  Dequeued element: " << dequeuedValue << endl;
+        delete temp;
+        return dequeuedValue;
     }
 
-    int peek() {
+    int peekFront() {
         if (isEmpty()) {
-            cout << "|  Stack Underflow" << endl;
+            cout << "|  Queue Underflow" << endl;
             return -1;
         }
-        int topValue = top->data;
-        cout << "|  Top element: " << topValue << endl;
-        return topValue;
+        int frontValue = front->data;
+        cout << "|  Front element: " << frontValue << endl;
+        return frontValue;
+    }
+
+    int peekBack() {
+        if (isEmpty()) {
+            cout << "|  Queue Underflow" << endl;
+            return -1;
+        }
+        int frontValue = rear->data;
+        cout << "|  Front element: " << frontValue << endl;
+        return frontValue;
     }
 
     bool isEmpty() {
-        return top == NULL;
-    }
-    void printedList(){
-        cout<<"--------------------------------------\n";
-        cout<<"|    STACK CONTENT    ";
-        printList(top);
-        cout<<"--------------------------------------\n";
+        return front == NULL;
     }
 
+    void printedList() {
+        cout << "--------------------------------------\n";
+        cout << "|    QUEUE CONTENT    ";
+        printList(front);
+        cout << "--------------------------------------\n";
+    }
+    
 };
 
-int main() {
-    LinkedListStack stack;
+int main(){
 
-    cout<<"----------------------------------------------\n";
-    // Pushing elements onto the stack
-    stack.push(10);
-    stack.push(20);
-    stack.push(30);
+    LinkedListBasedQueue queue;
 
-    stack.printedList();
+    cout << "----------------------------------------------\n";
+    queue.enqueue(10);
+    queue.enqueue(20);
+    queue.enqueue(30);
 
-    // Peeking at the top element
-    cout<<"--------------------------------------\n";
-    cout<<"|  Peeking at the top element"<<endl;
-    stack.peek();
-    cout<<"--------------------------------------\n";
+    queue.printedList();
 
-    // Popping elements from the stack
-    cout << "|  Popping..." << endl;
-    stack.pop();
-    stack.pop();
+    cout << "--------------------------------------\n";
+    cout << "|  Peeking at the front element" << endl;
+    queue.peekFront();
+    cout << "--------------------------------------\n";
 
-    stack.printedList();
+    cout << "--------------------------------------\n";
+    cout << "|  Peeking at the back element" << endl;
+    queue.peekBack();
+    cout << "--------------------------------------\n";
 
-    stack.pop();
-    cout<<"|  Trying to pop an empty stack"<<endl;
-    stack.pop(); // Trying to pop an empty stack
-    cout<<"----------------------------------------------\n";
+    cout << "|  Dequeuing..." << endl;
+    queue.dequeue();
+    queue.dequeue();
+
+    queue.printedList();
+    queue.dequeue();
+    cout << "|  Trying to dequeue an empty queue" << endl;
+    queue.dequeue();
+    cout << "----------------------------------------------\n";
+
     return 0;
 }

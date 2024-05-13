@@ -2,12 +2,12 @@
 #include "SinglyLinkedList.h"
 using namespace std;
 
-class LinkedListStack {
+class LinkedListBasedStack {
 private:
     Node *top;
 
 public:
-    LinkedListStack() {
+    LinkedListBasedStack() {
         top = NULL; 
     }
 
@@ -51,7 +51,7 @@ public:
 };
 
 int main() {
-    LinkedListStack stack;
+    LinkedListBasedStack stack;
 
     cout<<"----------------------------------------------\n";
     stack.push(10);
