@@ -10,7 +10,7 @@ private:
 public:
     ArrayBasedStack(int size) {
         totalSize = size;
-        arr = new int[size];
+        arr = new int[totalSize];
         topIndex = -1;
     }
 
