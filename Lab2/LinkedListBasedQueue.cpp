@@ -13,16 +13,8 @@ public:
     }
 
     void enqueue(int element) {
-        Node *temp = new Node(element);
-        if (rear == NULL) {
-            front = rear = temp;
-            cout << "|  Enqueued element: " << element << endl;
-            return ;
-        }
-        rear->next = temp;
-        rear = temp;
+        addToTail(front, rear, element);
         cout << "|  Enqueued element: " << element << endl;
-        return ;
     }
 
     int dequeue() {
@@ -31,13 +23,8 @@ public:
             return -1;
         }
         int dequeuedValue = front->data;
-        Node *temp = front;
-        front = front->next;
-        if (front == NULL) {
-            rear = NULL;
-        }
+        removeFromHead(front);
         cout << "|  Dequeued element: " << dequeuedValue << endl;
-        delete temp;
         return dequeuedValue;
     }
 
