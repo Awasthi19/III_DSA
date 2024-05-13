@@ -23,6 +23,19 @@ void removeFromHead(Node* &head){
     delete temp;
     return;
 }
+
+//adding a node to the tail of the list
+void addToTail(Node*&head,Node* &tail,int value){
+    if(head==NULL){
+        head=tail=new Node(value);
+        return;
+    }
+    Node* temp=new Node(value);
+    tail->next=temp;
+    tail=temp;//tail=tail->next;
+    return;
+}
+
 void printList(Node* &head){
     Node* temp=head;
     while(temp!=NULL){
