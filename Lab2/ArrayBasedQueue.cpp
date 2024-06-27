@@ -42,7 +42,7 @@ public:
     }
 
     bool isEmpty() {
-        return frontIndex == rearIndex; 
+        return frontIndex > rearIndex; 
     }
 
     bool isFull() {
