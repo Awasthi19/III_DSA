@@ -15,13 +15,18 @@ public:
     // }
     bool isDirected;
 
-    Graph() : isDirected(false) {}
+    Graph() {
+        isDirected = false;
+    }
 
-    Graph(bool isDirected) : isDirected(isDirected) {}
+    Graph(bool isDirected) {
+        this->isDirected = isDirected;
+    } 
 
     bool isEmpty() const {
         return adjacencyList.empty();
     }
+    
 
     bool isGraphDirected() const {
         return isDirected;
@@ -41,16 +46,7 @@ public:
         return false;
     }
 
-    bool hasNeighbor(const list<int>& neighbors, int vertex) const {
-        // Manual check if vertex is a neighbor in the list
-        for (int neighbor : neighbors) {
-            if (neighbor == vertex) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    
     void addVertex(int vertex) {
         // Check if the vertex already exists
         if (!vertexExists(vertex)) {
@@ -86,6 +82,7 @@ public:
         // Remove edge manually
         if (vertexExists(vertex1) && vertexExists(vertex2)) {
             adjacencyList[vertex1].remove(vertex2);
+            // adjacencyList[vertex1] = [neighbor1, neighbor2, ...] remove vertex2 from the list
             if (!isDirected) {
                 adjacencyList[vertex2].remove(vertex1);
             }
@@ -107,6 +104,16 @@ public:
         return count;
     }
 
+    bool hasNeighbor(const list<int>& neighbors, int vertex) const {
+        // Manual check if vertex is a neighbor in the list
+        for (int neighbor : neighbors) {
+            if (neighbor == vertex) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     int indegree(int vertex) const {
         int count = 0;
         for (const auto& pair : adjacencyList) {
@@ -119,7 +126,14 @@ public:
 
     int outdegree(int vertex) const {
         if (vertexExists(vertex)) {
-            return adjacencyList.at(vertex).size();
+            int count = 0;
+            for (const auto& pair : adjacencyList) {
+                if (pair.first == vertex) {
+                    count = pair.second.size();
+                    break;
+                }
+            }
+            return count;
         }
         return 0;
     }
@@ -128,11 +142,16 @@ public:
         return indegree(vertex) + outdegree(vertex);
     }
 
-    unordered_set<int> neighbours(int vertex) const {
-        unordered_set<int> result;
+    list<int> neighbours(int vertex) const {
+        list<int> result;
         if (vertexExists(vertex)) {
-            for (const auto& neighbor : adjacencyList.at(vertex)) {
-                result.insert(neighbor);
+            for (const auto& pair : adjacencyList) {
+                if (pair.first == vertex) {
+                    for (const auto& neighbor : pair.second) {
+                        result.push_back(neighbor);
+                    }
+                    break;
+                }
             }
         }
         return result;
@@ -140,7 +159,11 @@ public:
 
     bool neighbour(int vertex1, int vertex2) const {
         if (vertexExists(vertex1)) {
-            return hasNeighbor(adjacencyList.at(vertex1), vertex2);
+            for (const auto& pair : adjacencyList) {
+                if (pair.first == vertex1) {
+                    return hasNeighbor(pair.second, vertex2);
+                }
+            }
         }
         return false;
     }
@@ -149,29 +172,50 @@ public:
 };
 
 int main() {
-    Graph g;
+    // Create a directed graph
+    Graph directedGraph(true);
 
-    // Manually add vertices and edges
-    g.addVertex(1);
-    g.addVertex(2);
-    g.addVertex(3);
+    // Add vertices
+    directedGraph.addVertex(1);
+    directedGraph.addVertex(2);
+    directedGraph.addVertex(3);
+    directedGraph.addVertex(4);
 
-    g.addEdge(1, 2);
-    g.addEdge(1, 3);
-    g.addEdge(2, 3);
+    // Add edges
+    directedGraph.addEdge(1, 2);
+    directedGraph.addEdge(2, 3);
+    directedGraph.addEdge(3, 4);
+    directedGraph.addEdge(4, 1);
 
-    // To add a new vertex and edge manually
-    g.addEdge(4, 2); // Adding vertex 4 connected to vertex 2
+    // Print the number of vertices and edges
+    cout << "Number of vertices: " << directedGraph.numVertices() << endl;
+    cout << "Number of edges: " << directedGraph.numEdges() << endl;
 
-    // To remove an edge manually
-    g.removeEdge(1, 3); // Remove edge between vertex 1 and 3
+    // Check if a vertex exists
+    int vertex = 3;
+    if (directedGraph.vertexExists(vertex)) {
+        cout << "Vertex " << vertex << " exists in the graph." << endl;
+    } else {
+        cout << "Vertex " << vertex << " does not exist in the graph." << endl;
+    }
 
-    // To remove a vertex manually
-    g.removeVertex(2); // Remove vertex 2
+    // Check if an edge exists
+    int vertex1 = 2;
+    int vertex2 = 4;
+    if (directedGraph.neighbour(vertex1, vertex2)) {
+        cout << "There is an edge between " << vertex1 << " and " << vertex2 << "." << endl;
+    } else {
+        cout << "There is no edge between " << vertex1 << " and " << vertex2 << "." << endl;
+    }
 
-    // Accessing number of vertices and edges
-    cout << "Number of vertices: " << g.numVertices() << endl;
-    cout << "Number of edges: " << g.numEdges() << endl;
+    // Print the neighbors of a vertex
+    int targetVertex = 1;
+    list<int> neighbors = directedGraph.neighbours(targetVertex);
+    cout << "Neighbors of vertex " << targetVertex << ": ";
+    for (int neighbor : neighbors) {
+        cout << neighbor << " ";
+    }
+    cout << endl;
 
     return 0;
 }
